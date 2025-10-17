@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LABirintar NPS Survey</title>
-    <link rel="icon" type="image/png" href="https://operacaolabirintar.github.io/Reposit-rio-de-Imagens/IMG_4982.png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,14 +16,29 @@
         background-position: center top;
         background-repeat: no-repeat;
         background-attachment: fixed;
-        margin: 0;
-        padding: 0;
       }
     </style>
+    
+    <!-- 1. Configure import map to tell the browser where to find React. This MUST come before Babel. -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+
+    <!-- 2. Load Babel for in-browser transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
   <body>
     <div id="root"></div>
-    <!-- O Vite injeta automaticamente o JS final do build -->
-    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- 3. Tell Babel to fetch, transpile, and run our app's entry point as a module -->
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
   </body>
 </html>
