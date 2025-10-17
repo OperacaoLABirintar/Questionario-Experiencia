@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import ReactDOM from 'react-dom/client';
 
-// --- Start of Condensed Code ---
+// --- Consolidated Application Code ---
 
-// From types.ts
+// Enums and Interfaces (from types.ts)
 enum Status {
   Idle = 'idle',
   Submitting = 'submitting',
@@ -17,7 +17,7 @@ interface FormData {
   feedback: string;
 }
 
-// From services/googleSheetsService.ts
+// Google Sheets Service (from services/googleSheetsService.ts)
 const submitToGoogleSheet = async (scriptUrl: string, data: FormData): Promise<void> => {
   try {
     const response = await fetch(scriptUrl, {
@@ -44,7 +44,7 @@ const submitToGoogleSheet = async (scriptUrl: string, data: FormData): Promise<v
   }
 };
 
-// From components/Button.tsx
+// Button Component (from components/Button.tsx)
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
@@ -60,7 +60,7 @@ const Button: React.FC<ButtonProps> = ({ children, className, ...props }) => {
   );
 };
 
-// From components/NpsScoreSelector.tsx
+// NpsScoreSelector Component (from components/NpsScoreSelector.tsx)
 interface NpsScoreSelectorProps {
   selectedScore: number | null;
   onSelectScore: (score: number) => void;
@@ -112,7 +112,7 @@ const NpsScoreSelector: React.FC<NpsScoreSelectorProps> = ({ selectedScore, onSe
   );
 };
 
-// From components/TextAreaInput.tsx
+// TextAreaInput Component (from components/TextAreaInput.tsx)
 interface TextAreaInputProps {
   label: string;
   value: string;
@@ -140,8 +140,7 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({ label, value, onChange, p
   );
 };
 
-// --- End of Condensed Code ---
-
+// Main App Component (from App.tsx)
 const App: React.FC = () => {
   const [score, setScore] = useState<number | null>(null);
   const [reason, setReason] = useState<string>('');
@@ -270,6 +269,7 @@ const App: React.FC = () => {
   );
 };
 
+// --- Application Entry Point ---
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error("Could not find root element to mount to");
