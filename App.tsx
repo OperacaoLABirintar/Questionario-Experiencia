@@ -114,7 +114,7 @@ const App: React.FC = () => {
   
   return (
     <div className="h-screen flex flex-col">
-      <div className="h-40 md:h-40 lg:h-44 flex-shrink-0"></div>
+      <div className="h-24 md:h-32 flex-shrink-0"></div>
 
       <div className="flex-grow overflow-y-auto flex flex-col items-center p-4">
         <div className="w-full max-w-2xl mx-auto">
