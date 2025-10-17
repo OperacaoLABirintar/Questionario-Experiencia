@@ -1,9 +1,145 @@
 import React, { useState, useCallback } from 'react';
-import { NpsScoreSelector } from './components/NpsScoreSelector';
-import { TextAreaInput } from './components/TextAreaInput';
-import { Button } from './components/Button';
-import { submitToGoogleSheet } from './services/googleSheetsService';
-import { Status } from './types';
+
+// --- Start of Condensed Code ---
+
+// From types.ts
+enum Status {
+  Idle = 'idle',
+  Submitting = 'submitting',
+  Success = 'success',
+  Error = 'error',
+}
+
+interface FormData {
+  score: number;
+  reason: string;
+  feedback: string;
+}
+
+// From services/googleSheetsService.ts
+const submitToGoogleSheet = async (scriptUrl: string, data: FormData): Promise<void> => {
+  try {
+    const response = await fetch(scriptUrl, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
+        throw new Error(`Server responded with ${response.status}: ${errorData.error || 'Unknown error'}`);
+    }
+
+    const result = await response.json();
+    if (result.result !== 'success') {
+      throw new Error(result.error || 'An unknown error occurred during submission.');
+    }
+  } catch (error) {
+    console.error('Error submitting to Google Sheet:', error);
+    throw error;
+  }
+};
+
+// From components/Button.tsx
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+}
+
+const Button: React.FC<ButtonProps> = ({ children, className, ...props }) => {
+  return (
+    <button
+      className={`px-6 py-3 text-white font-bold rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#f4f0e8] ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+
+// From components/NpsScoreSelector.tsx
+interface NpsScoreSelectorProps {
+  selectedScore: number | null;
+  onSelectScore: (score: number) => void;
+}
+
+const NpsScoreSelector: React.FC<NpsScoreSelectorProps> = ({ selectedScore, onSelectScore }) => {
+  const scoreValue = selectedScore ?? 5; // Default to middle for initial render if null
+
+  const getColorClasses = (score: number | null): { accent: string, bg: string, text: string } => {
+    if (score === null) {
+      return { accent: 'accent-gray-400', bg: 'bg-gray-400', text: 'text-white' };
+    }
+    if (score <= 6) {
+      return { accent: 'accent-red-500', bg: 'bg-red-500', text: 'text-white' };
+    }
+    if (score <= 8) {
+      return { accent: 'accent-yellow-500', bg: 'bg-yellow-500', text: 'text-white' };
+    }
+    return { accent: 'accent-green-500', bg: 'bg-green-500', text: 'text-white' };
+  };
+
+  const colorClasses = getColorClasses(selectedScore);
+  
+  const handleScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onSelectScore(parseInt(event.target.value, 10));
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-4 w-full px-2">
+       <div 
+        className={`flex items-center justify-center w-16 h-16 rounded-full font-bold text-2xl shadow-lg transition-colors duration-300 ${colorClasses.bg} ${colorClasses.text}`}
+      >
+        {selectedScore ?? '-'}
+      </div>
+      <input
+        type="range"
+        min="0"
+        max="10"
+        step="1"
+        value={scoreValue}
+        onChange={handleScoreChange}
+        className={`w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer ${colorClasses.accent}`}
+      />
+      <div className="flex justify-between w-full text-sm text-gray-500 px-1 mt-1">
+        <span>0</span>
+        <span>10</span>
+      </div>
+    </div>
+  );
+};
+
+// From components/TextAreaInput.tsx
+interface TextAreaInputProps {
+  label: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  placeholder: string;
+  required: boolean;
+}
+
+const TextAreaInput: React.FC<TextAreaInputProps> = ({ label, value, onChange, placeholder, required }) => {
+  return (
+    <div>
+      <label className="block text-md font-bold text-gray-800 mb-2">
+        {label}
+        {required && <span className="text-[#ff595a] ml-1">*</span>}
+      </label>
+      <textarea
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        rows={4}
+        className="w-full px-4 py-3 text-gray-700 bg-white/80 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffa400] transition-shadow"
+      />
+    </div>
+  );
+};
+
+// --- End of Condensed Code ---
 
 const App: React.FC = () => {
   const [score, setScore] = useState<number | null>(null);
@@ -12,8 +148,6 @@ const App: React.FC = () => {
   const [status, setStatus] = useState<Status>(Status.Idle);
   const [error, setError] = useState<string | null>(null);
 
-  // For developer: Replace this placeholder with your actual Google Apps Script URL.
-  // The instructions for creating the script are in 'components/Instructions.tsx'.
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwy7jjg4AxL4Qjnfx5tnCjVO99DORSyDD387BefAQYa5ZCQ2NUuGcTy4Fbfs6hnIBz3/exec';
 
   const isReasonRequired = score !== null && score < 10;
@@ -114,19 +248,13 @@ const App: React.FC = () => {
   
   return (
     <div className="h-screen flex flex-col">
-      {/* This div acts as a spacer, reserving space for the logo at the top.
-          It is not scrollable and does not shrink.
-          The height is set to ensure the logo is visible and not overlapped.
-          Using responsive heights for better layout on different screens. */}
-      <div className="h-40 md:h-48 lg:h-56 flex-shrink-0"></div>
+      <div className="h-40 md:h-40 lg:h-44 flex-shrink-0"></div>
 
-      {/* This container holds the actual content and is scrollable. */}
       <div className="flex-grow overflow-y-auto flex flex-col items-center p-4">
         <div className="w-full max-w-2xl mx-auto">
           <header className="text-center mb-8">
               <h1 
-                className="text-3xl font-bold text-white" 
-                style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)' }}
+                className="text-3xl font-bold text-black"
               >
                 Avaliação de Experiência
               </h1>
