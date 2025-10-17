@@ -1,0 +1,5 @@
+{
+  "name": "LABirintar NPS Survey",
+  "description": "An NPS survey application to collect feedback on LABirintar learning experiences at Gara School. Submits responses to a Google Sheet via a Google Apps Script.",
+  "requestFramePermissions": []
+}
