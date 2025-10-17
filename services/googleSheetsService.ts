@@ -1,5 +1,5 @@
 
-import { FormData } from '../types';
+import { FormData } from '../types.ts';
 
 export const submitToGoogleSheet = async (scriptUrl: string, data: FormData): Promise<void> => {
   try {

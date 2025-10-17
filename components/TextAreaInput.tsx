@@ -3,20 +3,22 @@ import React from 'react';
 
 interface TextAreaInputProps {
   label: string;
+  id: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder: string;
   required: boolean;
 }
 
-export const TextAreaInput: React.FC<TextAreaInputProps> = ({ label, value, onChange, placeholder, required }) => {
+export const TextAreaInput: React.FC<TextAreaInputProps> = ({ id, label, value, onChange, placeholder, required }) => {
   return (
     <div>
-      <label className="block text-md font-bold text-gray-800 mb-2">
+      <label htmlFor={id} className="block text-md font-bold text-gray-800 mb-2">
         {label}
         {required && <span className="text-[#ff595a] ml-1">*</span>}
       </label>
       <textarea
+        id={id}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
