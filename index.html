@@ -18,8 +18,11 @@
         background-attachment: fixed;
       }
     </style>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script type="importmap">
+    <!-- 1. Load Babel for in-browser transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- 2. Configure import map to tell the browser where to find React -->
+    <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@18.2.0",
@@ -30,9 +33,11 @@
   }
 }
 </script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
+    
+    <!-- 3. Tell Babel to fetch, transpile, and run our app's entry point as a module -->
     <script type="text/babel" data-type="module" src="./index.tsx"></script>
   </body>
 </html>
