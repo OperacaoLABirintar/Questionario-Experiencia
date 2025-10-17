@@ -103,8 +103,9 @@ const NpsScoreSelector: React.FC<NpsScoreSelectorProps> = ({ selectedScore, onSe
         value={scoreValue}
         onChange={handleScoreChange}
         className={`w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer ${colorClasses.accent}`}
+        aria-label="NPS Score"
       />
-      <div className="flex justify-between w-full text-sm text-gray-500 px-1 mt-1">
+      <div className="flex justify-between w-full text-sm text-gray-500 px-1 mt-1" aria-hidden="true">
         <span>0</span>
         <span>10</span>
       </div>
@@ -115,20 +116,22 @@ const NpsScoreSelector: React.FC<NpsScoreSelectorProps> = ({ selectedScore, onSe
 // TextAreaInput Component (from components/TextAreaInput.tsx)
 interface TextAreaInputProps {
   label: string;
+  id: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder: string;
   required: boolean;
 }
 
-const TextAreaInput: React.FC<TextAreaInputProps> = ({ label, value, onChange, placeholder, required }) => {
+const TextAreaInput: React.FC<TextAreaInputProps> = ({ id, label, value, onChange, placeholder, required }) => {
   return (
     <div>
-      <label className="block text-md font-bold text-gray-800 mb-2">
+      <label htmlFor={id} className="block text-md font-bold text-gray-800 mb-2">
         {label}
         {required && <span className="text-[#ff595a] ml-1">*</span>}
       </label>
       <textarea
+        id={id}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
@@ -206,15 +209,16 @@ const App: React.FC = () => {
 
     return (
       <form onSubmit={handleSubmit} className="space-y-8">
-        <div>
-          <label className="block text-lg font-bold text-gray-800 mb-4 text-center">
+        <fieldset>
+          <legend className="block text-lg font-bold text-gray-800 mb-4 text-center">
             De 0 a 10, quanto você recomendaria a experiência vivenciada?
-          </label>
+          </legend>
           <NpsScoreSelector selectedScore={score} onSelectScore={setScore} />
-        </div>
+        </fieldset>
 
         {isReasonRequired && (
           <TextAreaInput
+            id="reason-input"
             label="Porque não 10?"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
@@ -224,6 +228,7 @@ const App: React.FC = () => {
         )}
         
         <TextAreaInput
+          id="feedback-input"
           label="Impressões, percepções e vivências (Opcional)"
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
@@ -231,7 +236,7 @@ const App: React.FC = () => {
           required={false}
         />
 
-        {error && <p className="text-red-600 text-sm text-center">{error}</p>}
+        {error && <p role="alert" className="text-red-600 text-sm text-center">{error}</p>}
         
         <div className="pt-4">
           <Button
