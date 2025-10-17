@@ -14,7 +14,7 @@ const App: React.FC = () => {
 
   // For developer: Replace this placeholder with your actual Google Apps Script URL.
   // The instructions for creating the script are in 'components/Instructions.tsx'.
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/REPLACE_WITH_YOUR_SCRIPT_ID/exec';
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwy7jjg4AxL4Qjnfx5tnCjVO99DORSyDD387BefAQYa5ZCQ2NUuGcTy4Fbfs6hnIBz3/exec';
 
   const isReasonRequired = score !== null && score < 10;
 
