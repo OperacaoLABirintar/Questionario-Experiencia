@@ -249,11 +249,11 @@ const App: React.FC = () => {
   
   return (
     <div className="h-screen flex flex-col">
-      <div className="h-24 md:h-32 flex-shrink-0"></div>
+      <div className="h-32 md:h-44 flex-shrink-0"></div>
 
       <div className="flex-grow overflow-y-auto flex flex-col items-center p-4">
         <div className="w-full max-w-2xl mx-auto">
-          <header className="text-center mb-8">
+          <header className="text-center mb-4 md:mb-8">
               <h1 
                 className="text-3xl font-bold text-black"
               >
@@ -261,7 +261,7 @@ const App: React.FC = () => {
               </h1>
           </header>
           
-          <main className="bg-white/70 p-8 rounded-2xl shadow-lg backdrop-blur-sm mb-8">
+          <main className="bg-white/70 p-4 md:p-8 rounded-2xl shadow-lg backdrop-blur-sm mb-4 md:mb-8">
             {renderFormContent()}
           </main>
         </div>
